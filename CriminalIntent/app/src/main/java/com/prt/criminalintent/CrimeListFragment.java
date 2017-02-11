@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -42,6 +44,7 @@ public class CrimeListFragment extends Fragment
     }
 
         private class CrimeHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener
         {
             private TextView mTitleTextView;
             private TextView mDateTextView;
@@ -51,6 +54,7 @@ public class CrimeListFragment extends Fragment
 
             public CrimeHolder(View itemView) {
                 super(itemView);
+                itemView.setOnClickListener(this);
 
                 mTitleTextView = (TextView)
                         itemView.findViewById(R.id.list_item_crime_title_text_view);
@@ -63,8 +67,15 @@ public class CrimeListFragment extends Fragment
             public void bindCrime(Crime crime) {
                 mCrime = crime;
                 mTitleTextView.setText(mCrime.getTitle());
-                mDateTextView.setText(mCrime.getDate().toString());
+                mDateTextView.setText(DateFormat.format("EEEE, MMM d, YYYY", mCrime.getDate()));
                 mSolvedCheckBox.setChecked(mCrime.isSolved());
+            }
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),
+                        mCrime.getTitle() + " clicked!",
+                        Toast.LENGTH_SHORT).show();
             }
         }
 
