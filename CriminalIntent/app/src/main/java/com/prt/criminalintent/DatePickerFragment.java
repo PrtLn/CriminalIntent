@@ -19,25 +19,44 @@ import java.util.GregorianCalendar;
  * Created by L.Pikalova on 2/13/2017.
  */
 
-public class DatePickerFragment extends DialogFragment
+public class DatePickerFragment extends PickerDialogFragment
 {
-    public static final String EXTRA_DATE =
-            "com.prt.criminalintent.date";
-    private static final String ARG_DATE = "date";
-
     private DatePicker mDatePicker;
 
     // passing data to DatePickerFragment
     public static DatePickerFragment newInstance(Date date) {
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_DATE, date);
+        Bundle args = getArgs(date);
 
         DatePickerFragment fragment = new DatePickerFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    @Override
+    protected View initLayout() {
+        View view  = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_date, null);
+        mDatePicker = (DatePicker) view.findViewById(R.id.dialog_date_date_picker);
+        mDatePicker.init(
+                mCalendar.get(Calendar.YEAR),
+                mCalendar.get(Calendar.MONTH),
+                mCalendar.get(Calendar.DAY_OF_MONTH),
+                null);
+        return view;
+    }
+
+    protected Date getDate() {
+        //Get the date from the DatePicker
+        int year = mDatePicker.getYear();
+        int month = mDatePicker.getMonth();
+        int day = mDatePicker.getDayOfMonth();
+
+        //The time remains the same, so pull it from the calendar
+        int hour = mCalendar.get(Calendar.HOUR_OF_DAY);
+        int minute = mCalendar.get(Calendar.MINUTE);
+
+        return new GregorianCalendar(year, month, day, hour, minute).getTime();
+    }
+
+/*    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Date date = (Date) getArguments().getSerializable(ARG_DATE);
 
@@ -84,5 +103,5 @@ public class DatePickerFragment extends DialogFragment
         getTargetFragment()
                 .onActivityResult(getTargetRequestCode(), resultCode, intent);
         // getActivity().finish();
-    }
+    }*/
 }
