@@ -12,7 +12,7 @@
     <string name="new_crime">New Crime</string>
     <string name="show_subtitle">Show Subtitle</string>
     <string name="hide_subtitle">Hide Subtitle</string>
-    <string name="subtitle_format">%1$ crimes</string>
+    <string name="subtitle_format">%1$d crimes</string>
 
     <string name="crimes_title">Crimes</string>
 </resources>
