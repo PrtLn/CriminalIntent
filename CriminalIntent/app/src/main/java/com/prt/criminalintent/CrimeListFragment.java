@@ -27,7 +27,6 @@ import java.util.List;
 public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
-//    private boolean mSubtitleVisible = false;
     private boolean mSubtitleVisible;
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
 
@@ -102,9 +101,7 @@ public class CrimeListFragment extends Fragment {
 
     private void updateSubtitle() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
-        // int crimeCount = crimeLab.getCrimes().size();
-        // String subtitle = getString(R.string.subtitle_format, crimeCount);
-        
+        // plural rows (counts of the subtitle)
         int crimeSize = crimeLab.getCrimes().size();
         String subtitle = getResources()
                 .getQuantityString(R.plurals.subtitle_plural, crimeSize, crimeSize);
