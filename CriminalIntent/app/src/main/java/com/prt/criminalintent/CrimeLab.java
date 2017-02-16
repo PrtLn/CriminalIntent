@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.prt.criminalintent.database.CrimeBaseHelper;
+import com.prt.criminalintent.database.CrimeCursorWrapper;
 import com.prt.criminalintent.database.CrimeDbSchema;
 import com.prt.criminalintent.database.CrimeDbSchema.CrimeTable;
 
@@ -46,15 +47,41 @@ public class CrimeLab {
     }
 
     public void deleteCrime(Crime crime) {
-//        mCrimes.remove(crime);
+        sCrimeLab.deleteCrime(crime);
     }
 
     public List<Crime> getCrimes() {
-        return new ArrayList<>();
+        // return a list of crimes
+        List<Crime> crimes = new ArrayList<>();
+
+        CrimeCursorWrapper cursor = queryCrimes(null, null);
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                crimes.add(cursor.getCrime());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return crimes;
     }
 
     public Crime getCrime(UUID id) {
-        return null;
+        CrimeCursorWrapper cursor = queryCrimes(
+                CrimeTable.Columns.UUID + " = ?",
+                new String[] { id.toString() }
+        );
+        try {
+            if (cursor.getCount() == 0) {
+                return null;
+            }
+            cursor.moveToFirst();
+            return cursor.getCrime();
+        } finally {
+            cursor.close();
+        }
     }
 
     public void updateCrime(Crime crime) {
@@ -63,7 +90,7 @@ public class CrimeLab {
 
         mDatabase.update(CrimeTable.NAME, values,
                 CrimeTable.Columns.UUID + " = ?",
-                new String[] { uuidString });
+                new String[]{uuidString});
     }
 
     private static ContentValues getContentValues(Crime crime) {
@@ -76,9 +103,9 @@ public class CrimeLab {
         return values;
     }
 
-    private Cursor queryCrimes(String whereClause, String[] whereArgs) {
+    private CrimeCursorWrapper queryCrimes(String whereClause, String[] whereArgs) {
         Cursor cursor = mDatabase.query(
-               CrimeTable.NAME,
+                CrimeTable.NAME,
                 null, // Columns - null choose all columns
                 whereClause,
                 whereArgs,
@@ -86,6 +113,6 @@ public class CrimeLab {
                 null, // having
                 null  // orderBy
         );
-        return cursor;
+        return new CrimeCursorWrapper(cursor);
     }
 }
