@@ -1,9 +1,12 @@
 package com.prt.criminalintent;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.prt.criminalintent.database.CrimeBaseHelper;
+import com.prt.criminalintent.database.CrimeDbSchema;
+import com.prt.criminalintent.database.CrimeDbSchema.CrimeTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +19,6 @@ import java.util.UUID;
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
     private Context mAppContext;
-    private List<Crime> mCrimes;
 
     private Context mContext;
     private SQLiteDatabase mDatabase;
@@ -34,27 +36,42 @@ public class CrimeLab {
         mContext = context.getApplicationContext();
         mDatabase = new CrimeBaseHelper(mContext)
                 .getWritableDatabase();
-        mCrimes = new ArrayList<>();
     }
 
     public void addCrime(Crime crime) {
-        mCrimes.add(crime);
+        ContentValues values = getContentValues(crime);
+
+        mDatabase.insert(CrimeTable.NAME, null, values);
     }
 
     public void deleteCrime(Crime crime) {
-        mCrimes.remove(crime);
+//        mCrimes.remove(crime);
     }
 
     public List<Crime> getCrimes() {
-        return mCrimes;
+        return new ArrayList<>();
     }
 
     public Crime getCrime(UUID id) {
-        for (Crime crime : mCrimes) {
-            if (crime.getId().equals(id)) {
-                return crime;
-            }
-        }
         return null;
+    }
+
+    public void updateCrime(Crime crime) {
+        String uuidString = crime.getId().toString();
+        ContentValues values = getContentValues(crime);
+
+        mDatabase.update(CrimeTable.NAME, values,
+                CrimeTable.Columns.UUID + " = ?",
+                new String[] { uuidString });
+    }
+
+    private static ContentValues getContentValues(Crime crime) {
+        ContentValues values = new ContentValues();
+        values.put(CrimeTable.Columns.UUID, crime.getId().toString());
+        values.put(CrimeTable.Columns.TITLE, crime.getTitle());
+        values.put(CrimeTable.Columns.DATE, crime.getDate().getTime());
+        values.put(CrimeTable.Columns.SOLVED, crime.isSolved() ? 1 : 0);
+
+        return values;
     }
 }
