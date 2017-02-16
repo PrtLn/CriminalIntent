@@ -15,8 +15,12 @@ public class Crime {
     private boolean mSolved;
 
     public Crime() {
+        this(UUID.randomUUID());
+    }
+
+    public Crime(UUID id) {
         // generate unique identifier
-        mId = UUID.randomUUID();
+        mId = id;
         mDate = new Date();
     }
 
