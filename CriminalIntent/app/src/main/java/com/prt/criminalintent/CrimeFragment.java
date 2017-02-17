@@ -32,6 +32,7 @@ public class CrimeFragment extends Fragment {
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
+    private Button mReportButton;
 
     private static final String ARG_CRIME_ID ="crime_id";
     private static final String DIALOG_DATE = "DialogDate";
@@ -65,7 +66,7 @@ public class CrimeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_crime, container, false);
 
         mTitleField = (EditText)view.findViewById(R.id.crime_title);
@@ -97,7 +98,7 @@ public class CrimeFragment extends Fragment {
                 // invoke newInstance()
                 DatePickerFragment dialog = DatePickerFragment
                         .newInstance(mCrime.getDate());
-                // set terget fragment
+                // set target fragment
                 dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
                 dialog.show(manager, DIALOG_DATE);
             }
@@ -111,6 +112,21 @@ public class CrimeFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // set the crime`s solved property
                 mCrime.setSolved(isChecked);
+            }
+        });
+
+        mReportButton = (Button) view.findViewById(R.id.crime_report);
+        // sending a crime report
+        mReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
+                intent.putExtra(Intent.EXTRA_SUBJECT,
+                        getString(R.string.crime_report_subject));
+                intent = Intent.createChooser(intent, getString(R.string.send_report));
+                startActivity(intent);
             }
         });
 
