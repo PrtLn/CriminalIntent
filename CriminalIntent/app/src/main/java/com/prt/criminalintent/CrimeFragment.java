@@ -3,6 +3,8 @@ package com.prt.criminalintent;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ProviderInfo;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
@@ -163,6 +165,32 @@ public class CrimeFragment extends Fragment {
                     .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
             updateDate();
+        } // getting the data from the contact list
+        else if (requestCode == REQUEST_CONTACT && data != null) {
+            Uri contactUri = data.getData();
+
+            // specify which fields you want your query to return values for
+            String[] queryFields = new String[] {
+                    ContactsContract.Contacts.DISPLAY_NAME
+            };
+
+            // perform your query - the contactUri is like "where" clause here
+            Cursor cursor = getActivity().getContentResolver()
+                    .query(contactUri, queryFields, null, null, null);
+
+            try {
+                // double-check that you actually got results
+                if (cursor.getCount() == 0) {
+                    return;
+                }
+                // pull out the first column of the first row of data - suspect`s name
+                cursor.moveToFirst();
+                String suspect = cursor.getString(0);
+                mCrime.setSuspect(suspect);
+                mSuspectButton.setText(suspect);
+            } finally {
+                cursor.close();
+            }
         }
     }
 
