@@ -28,6 +28,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+
+import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
@@ -44,6 +46,7 @@ public class CrimeFragment extends Fragment {
     private static final int REQUEST_CONTACT = 1;
 
     private Crime mCrime;
+    private File mPhotoFile;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
@@ -67,8 +70,7 @@ public class CrimeFragment extends Fragment {
         // retrieving an extra
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
-
-        setHasOptionsMenu(true);
+        mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
     }
 
     @Override
