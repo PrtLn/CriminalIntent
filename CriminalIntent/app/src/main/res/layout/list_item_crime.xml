@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/list_item_crime_solved_check_box"
             android:textStyle="bold"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:padding="4dp"
             tools:text="Crime Title"/>
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/list_item_crime_solved_check_box"
             android:layout_below="@id/list_item_crime_title_text_view"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:padding="4dp"
             tools:text="Crime Date"
             style="?android:listSeparatorTextViewStyle"/>

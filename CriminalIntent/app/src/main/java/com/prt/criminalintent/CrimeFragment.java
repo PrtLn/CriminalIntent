@@ -74,6 +74,8 @@ public class CrimeFragment extends Fragment {
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -159,8 +161,8 @@ public class CrimeFragment extends Fragment {
         // sending an implicit intent
         final Intent pickContact = new Intent(Intent.ACTION_PICK,
                 ContactsContract.Contacts.CONTENT_URI);
-            // a dummy code to test filter
-            // pickContact.addCategory(Intent.CATEGORY_HOME);
+        // a dummy code to test filter
+        // pickContact.addCategory(Intent.CATEGORY_HOME);
         mSuspectButton = (Button) view.findViewById(R.id.crime_suspect);
         mSuspectButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,7 +224,7 @@ public class CrimeFragment extends Fragment {
             Uri contactUri = data.getData();
 
             // specify which fields you want your query to return values for
-            String[] queryFields = new String[] {
+            String[] queryFields = new String[]{
                     ContactsContract.Contacts.DISPLAY_NAME
             };
 
@@ -243,7 +245,7 @@ public class CrimeFragment extends Fragment {
             } finally {
                 cursor.close();
             }
-        } else if (requestCode == REQUEST_PHOTO){
+        } else if (requestCode == REQUEST_PHOTO) {
             updatePhotoView();
         }
     }
